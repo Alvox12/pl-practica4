@@ -1,0 +1,72 @@
+options {
+ STATIC=false;
+}
+
+PARSER_BEGIN(ConstructorAST)
+package constructorast;
+
+import ast.*; 
+
+public class ConstructorAST {
+	 private AST as = new AST();
+	 private final static int MAS=0;
+	 private final static int MENOS=1;
+	 private final static int POR=2;
+	 private final static int DIV=3;
+	 
+	 private E mkexp(int op, E opnd1, E opnd2){
+		 switch(op) { 
+			 case MAS: return as.suma(opnd1,opnd2);
+			 case MENOS: return as.resta(opnd1,opnd2);
+			 case POR: return as.mul(opnd1,opnd2);
+			 case DIV: return as.div(opnd1,opnd2);
+			 case AND: return as.and
+			 default: return null;
+		}
+	}
+} 
+
+PARSER_END(ConstructorAST)
+	TOKEN:{<#letra:["a"-"z","A"-"Z"]>}
+	TOKEN:{<#digito:["0"-"9"]>}
+	TOKEN:{<bbaja:"_">}
+	SKIP:{<["\t"," ","\r","\b","\n"]>}
+	TOKEN:{<num:"num">}
+	TOKEN:{<bool:"bool">}
+	TOKEN:{<verdadero:"true">}
+	TOKEN:{<falso:"false">}
+	TOKEN:{<or:"or">}
+	TOKEN:{<and:"and">}
+	TOKEN:{<not:"not">}
+	TOKEN:{<separador:"&&">}
+	TOKEN:{<exponencial:(["E","e"])(["+","-"])? <digito> (<digito>)*>}
+	TOKEN:{<identificador:<letra>(<letra>|<digito>|<bbaja>)*>}
+	TOKEN:{<numeroEntero: (["+","-"])? <digito> (<digito>)* (<exponencial>)?>}
+	TOKEN:{<numeroReal: (["+","-"])? <digito> (<digito>)* "." <digito> (<digito>)* (<exponencial>)?>}
+  
+  
+ S Sp() : {S ast;} {ast=S() <EOF> {return ast;}}
+ S S()  : {DefinicionLDs def; DeclaracionLD2 decs;} {def=LDs() <separador> decs=LD2() {return new Separador(def, decs)}}
+ 
+
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
