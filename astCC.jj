@@ -20,7 +20,15 @@ public class ConstructorAST {
 			 case MENOS: return as.resta(opnd1,opnd2);
 			 case POR: return as.mul(opnd1,opnd2);
 			 case DIV: return as.div(opnd1,opnd2);
-			 case AND: return as.and
+			 case AND: return as.and(opnd1,opnd2);
+			 case OR: return as.or(opnd1,opnd2);
+			 case NOT: return as.not(opnd1);
+			 case MAYOR: return as.mayor(opnd1,opnd2);
+			 case MENOR: return as.menor(opnd1,opnd2);
+			 case MAYORIGUAL: return as.mayorIgual(opnd1,opnd2);
+			 case MENORIGUAL: return as.menorIgual(opnd1,opnd2);
+			 case DIFERENTE: return as.dif(opnd1,opnd2);
+			 case EQUIVALENTE: return as.eq(opnd1,opnd2);
 			 default: return null;
 		}
 	}
@@ -46,11 +54,40 @@ PARSER_END(ConstructorAST)
   
   
  S Sp() : {S ast;} {ast=S() <EOF> {return ast;}}
- S S()  : {DefinicionLDs def; DeclaracionLD2 decs;} {def=LDs() <separador> decs=LD2() {return new Separador(def, decs)}}
+ S S()  : {LDs def; LD2 decs;} {def=LDs() <separador> decs=LD2() {return new S(def, decs)}}
  
+ LD2 LD2() : {ResulD2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d.id(),d.exp()))
+ 	{return aOfRLD2;}}
 
+LDs RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
+	 {"," d=D() aOfRLD21=RLDs(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
+	 {return aOfRLD21;}|
+	 {return ahOfRLD20;} }
+	 
+ ResulD2 D2() : {Token id; E aOfE0;} {id=<identificador> "=" aOfE0=E0()
+ {return new ResulD2(id.image,aOfE0);}} 
+	 
+ E E0() : {E aOfE1,aOfRE0;} {aOfE1=E1() aOfRE0=RE0(aOfE1) {return aOfRE0;}}
+ 
+ E RE0(E ahOfRE0) : {int op0; E aOfE1; E aOfRE0;}
+	 {op0=OP0() aOfE1=E1() aOfRE0=RE0(mkexp(op0,ahOfRE0,aOfE1))
+	 {return aOfRE0;}|
+	 {return ahOfRE0;} }
+	 
+ E E1() : {E aOfE2,aOfRE1;} {aOfE2=E2() aOfRE1=RE1(aOfE2) {return aOfRE1;}}
+ 
+ 
 	
+  int OP0() : {} {"+" {return MAS;}| "-" {return MENOS;}}
   
+  int OP2() : {} {"<" {return MENOR;}| ">" {return MAYOR;} | "<=" {return MENORIGUAL;}
+  | ">=" {return MAYORIGUAL;} | "==" {return EQUIVALENTE;} | "!=" {return DIFERENTE;}}
+  
+  int OP3() : {} {"*" {return POR;}| "/" {return DIV;}}
+  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
   
   
   
