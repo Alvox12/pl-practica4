@@ -24,11 +24,11 @@ public class AST {
 	public E boolTrue(String b) {return new True();}
 	public E boolFalse(String b) {return new False();} 
 	
-	public LDs dCompuesta(LDs def, String tipo, String id) {
+	public LDs defCompuesta(LDs def, String tipo, String id) {
 		return new dCompuesta(def, tipo, id);
 	}
 	
-	public LDs dSimple(String tipo, String id) {
+	public LDs defSimple(String tipo, String id) {
 		return new dSimple(tipo, id);
 	}
 	

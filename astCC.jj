@@ -67,28 +67,28 @@ PARSER_END(ConstructorAST)
   
   
  S Sp() : {S ast;} {ast=S() <EOF> {return ast;}}
- S S()  : {LDs def; LD2 decs;} {def=LDs() <separador> decs=LD2() {return new S(def, decs)}}
+ S S()  : {LDs def; LD2 decs;} {def=LDs() <separador> decs=LD2() {return new S(def, decs);}}
  
- LDs LDs() : {DeclaraD d; LDs aOfRLDs;} {d=D() aOfRLDs=RLDs(as.dSimple(d.tipo(), d.id())) {return aOfRLDs;}}
+ LDs LDs() : {D d; LDs aOfRLDs;} {d=D() aOfRLDs=RLDs(as.defSimple(d.tipo(), d.id())) {return aOfRLDs;}}
  
- LDs RLDs(LDs ahOfRLDs0) : {ResulDs d; LDs aOfRLDs1;} 
- {";" d=D() aOfRLDs1=RLDs(as.dCompuesta(ahOfRLDs0,d.tipo(),d.id()))
+ LDs RLDs(LDs ahOfRLDs0) : {D d; LDs aOfRLDs1;} 
+ {";" d=D() aOfRLDs1=RLDs(as.defCompuesta(ahOfRLDs0,d.tipo(),d.id()))
 	 {return aOfRLDs1;}|
 	 {return ahOfRLDs0;} }
  
- DeclaraD D() : {Token tipo, Token id;} {tipo=<num> id=<identificador> {return new DeclaraD(tipo.image, id.image);}
- | tipo=<bool> id=<identificador> {return new DeclaraD(tipo.image, id.image);}}
+ D D() : {Token tipo; Token id;} {tipo=<num> id=<identificador> {return new D(tipo.image, id.image);}
+ | tipo=<bool> id=<identificador> {return new D(tipo.image, id.image);}}
  
- LD2 LD2() : {ResulD2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d.id(),d.exp()))
+ LD2 LD2() : {D2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d.id(),d.exp()))
  	{return aOfRLD2;}}
 
-LD2 RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
-	 {";" d=D2() aOfRLD21=RLDs(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
+LD2 RLD2(LD2 ahOfRLD20) : {D2 d; LD2 aOfRLD21;}
+	 {";" d=D2() aOfRLD21=RLD2(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
 	 {return aOfRLD21;}|
 	 {return ahOfRLD20;} }
 	 
- ResulD2 D2() : {Token id; E aOfE0;} {id=<identificador> "=" aOfE0=E0()
- {return new ResulD2(id.image,aOfE0);}} 
+ D2 D2() : {Token id; E aOfE0;} {id=<identificador> "=" aOfE0=E0()
+ {return new D2(id.image,aOfE0);}} 
 	 
  E E0() : {E aOfE1,aOfRE0;} {aOfE1=E1() aOfRE0=RE0(aOfE1) {return aOfRE0;}}
  
@@ -97,12 +97,12 @@ LD2 RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
 	 {return aOfRE0;}|
 	 {return ahOfRE0;} }
 	 
- E E1() : {E aOfE2,aOfRE1;} {aOfE2=E2() aOfRE1=RE1(aOfE2) {return aOfRE1;}}
+ E E1() : {E aOfE2, aOfRE1;} {aOfE2=E2() aOfRE1=RE1(aOfE2) {return aOfRE1;}}
  
  E RE1(E ahOfRE1): {int op1; E aOfE2; E aOfRE1;}
-	 {op1=OP1() aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
+	 {op1=OPAND() aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
 	 {return aOfRE1;} 
-	  | op1=OP1() aOfE2=E2() (mkexp(op1,ahOfRE1,aOfE2)){return aOfE2;}
+	  | op1=OPOR() aOfE2=E2(){return aOfE2;}
 	  | {return ahOfRE1;} }
 	
 	
@@ -113,7 +113,7 @@ E RE2(E ahOfRE2) : {int op2; E aOfE3; E aOfRE2;}
 	| {return ahOfRE2;}}
 	 	
 
-E E3() : {E aOfE4,aOfRE3;} {aOfE4=E4() aOfRE3=RE3(aOfE4) {return aOfRE3;}}
+E E3() : {E aOfE4, aOfRE3;} {aOfE4=E4() aOfRE3=RE3(aOfE4) {return aOfRE3;}}
 
 E RE3(E ahOfRE3) : {int op3; E aOfE4; E aOfRE3;}
 	 {op3=OP3() aOfE4=E4() aOfRE3=RE3(mkexp(op3,ahOfRE3,aOfE4))
@@ -121,8 +121,8 @@ E RE3(E ahOfRE3) : {int op3; E aOfE4; E aOfRE3;}
 	 {return ahOfRE3;} }
 	 
 	 
-E E4() : {E aOfE4, aOfE5: int op4} {op4=OP4() aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;}
-| aOfE5=E5() {return aOfE5;} | {return aOfE4;}}
+E E4() : {E aOfE4, aOfE5; int op4;} {op4=OPNOT() aOfE5=E5() {return aOfE5;}
+| aOfE5=E5() {return aOfE5;} | "-" aOfE4=E4() {return aOfE4;}}
 	
 	
 E E5() : {Token t; E aOfE0;}
@@ -135,14 +135,16 @@ E E5() : {Token t; E aOfE0;}
  
   int OP0() : {} {"+" {return MAS;}| "-" {return MENOS;}}
   
-  int OP1() : {} {<and> {return AND;}| <or> {return OR;}}
+  int OPAND() : {} {<and> {return AND;}}
+  
+  int OPOR() : {} {<or> {return OR;}}
    
   int OP2() : {} {"<" {return MENOR;}| ">" {return MAYOR;} | "<=" {return MENORIGUAL;}
   | ">=" {return MAYORIGUAL;} | "==" {return EQUIVALENTE;} | "!=" {return DIFERENTE;}}
   
   int OP3() : {} {"*" {return POR;}| "/" {return DIV;}}
 
-  int OP4() : {} {<not> {return NOT;}}
+  int OPNOT() : {} {<not> {return NOT;}}
   
   
   

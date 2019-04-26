@@ -1,7 +1,15 @@
 package ast;
 
-public abstract class S {
+public class S {
 
-	public LD2 decs() {throw new UnsupportedOperationException("decs");}
-	public LDs def() {throw new UnsupportedOperationException("def");}
+	private LD2 decs;
+	private LDs def;
+	
+	public S(LDs def, LD2 decs) {
+		this.def = def;
+		this.decs = decs;
+	}
+	
+	public LD2 decs() {return decs;}
+	public LDs def() {return def;}
 }
