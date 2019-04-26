@@ -12,4 +12,8 @@ public class S {
 	
 	public LD2 decs() {return decs;}
 	public LDs def() {return def;}
+	
+	public String toString() {
+		return def.toString() + decs.toString();
+	}
 }
