@@ -24,6 +24,14 @@ public class AST {
 	public E boolTrue(String b) {return new True();}
 	public E boolFalse(String b) {return new False();} 
 	
+	public LDs dCompuesta(LDs def, String tipo, String id) {
+		return new dCompuesta(def, tipo, id);
+	}
+	
+	public LDs dSimple(String tipo, String id) {
+		return new dSimple(tipo, id);
+	}
+	
 	public LD2 cCompuesta(LD2 decs, String id, E exp) {
 		 return new OPCompuesta(decs,id,exp);}
 	

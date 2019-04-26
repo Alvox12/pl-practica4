@@ -69,11 +69,21 @@ PARSER_END(ConstructorAST)
  S Sp() : {S ast;} {ast=S() <EOF> {return ast;}}
  S S()  : {LDs def; LD2 decs;} {def=LDs() <separador> decs=LD2() {return new S(def, decs)}}
  
+ LDs LDs() : {DeclaraD d; LDs aOfRLDs;} {d=D() aOfRLDs=RLDs(as.dSimple(d.tipo(), d.id())) {return aOfRLDs;}}
+ 
+ LDs RLDs(LDs ahOfRLDs0) : {ResulDs d; LDs aOfRLDs1;} 
+ {";" d=D() aOfRLDs1=RLDs(as.dCompuesta(ahOfRLDs0,d.tipo(),d.id()))
+	 {return aOfRLDs1;}|
+	 {return ahOfRLDs0;} }
+ 
+ DeclaraD D() : {Token tipo, Token id;} {tipo=<num> id=<identificador> {return new DeclaraD(tipo.image, id.image);}
+ | tipo=<bool> id=<identificador> {return new DeclaraD(tipo.image, id.image);}}
+ 
  LD2 LD2() : {ResulD2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d.id(),d.exp()))
  	{return aOfRLD2;}}
 
-LDs RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
-	 {"," d=D() aOfRLD21=RLDs(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
+LD2 RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
+	 {";" d=D2() aOfRLD21=RLDs(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
 	 {return aOfRLD21;}|
 	 {return ahOfRLD20;} }
 	 
@@ -90,9 +100,9 @@ LDs RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
  E E1() : {E aOfE2,aOfRE1;} {aOfE2=E2() aOfRE1=RE1(aOfE2) {return aOfRE1;}}
  
  E RE1(E ahOfRE1): {int op1; E aOfE2; E aOfRE1;}
-	 {op1=AND aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
+	 {op1=OP1() aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
 	 {return aOfRE1;} 
-	  | op1=OR aOfE2=E2() (mkexp(op1,ahOfRE1,aOfE2)){return aOfE2;}
+	  | op1=OP1() aOfE2=E2() (mkexp(op1,ahOfRE1,aOfE2)){return aOfE2;}
 	  | {return ahOfRE1;} }
 	
 	
@@ -111,8 +121,8 @@ E RE3(E ahOfRE3) : {int op3; E aOfE4; E aOfRE3;}
 	 {return ahOfRE3;} }
 	 
 	 
-E E4() : {E aOfE4, aOfE5: int op4} {op4=NOT aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;}
-| aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;} | {return aOfE4;}}
+E E4() : {E aOfE4, aOfE5: int op4} {op4=OP4() aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;}
+| aOfE5=E5() {return aOfE5;} | {return aOfE4;}}
 	
 	
 E E5() : {Token t; E aOfE0;}
@@ -125,12 +135,14 @@ E E5() : {Token t; E aOfE0;}
  
   int OP0() : {} {"+" {return MAS;}| "-" {return MENOS;}}
   
+  int OP1() : {} {<and> {return AND;}| <or> {return OR;}}
+   
   int OP2() : {} {"<" {return MENOR;}| ">" {return MAYOR;} | "<=" {return MENORIGUAL;}
   | ">=" {return MAYORIGUAL;} | "==" {return EQUIVALENTE;} | "!=" {return DIFERENTE;}}
   
   int OP3() : {} {"*" {return POR;}| "/" {return DIV;}}
 
-
+  int OP4() : {} {<not> {return NOT;}}
   
   
   
