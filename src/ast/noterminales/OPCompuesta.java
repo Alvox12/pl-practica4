@@ -2,6 +2,7 @@ package ast.noterminales;
 
 import ast.E;
 import ast.LD2;
+import ast.TipoE;
 
 public class OPCompuesta extends LD2 {
 
@@ -18,4 +19,9 @@ public class OPCompuesta extends LD2 {
 	public E exp() {return exp;}
 	public String id() {return id;}
 	public LD2 decs() {return decs;}
+
+	@Override
+	public String toString() {
+		return TipoE.ID.toString() + " ("  +exp + ")" + "\n" + "(" + decs + ")";
+	}
 }

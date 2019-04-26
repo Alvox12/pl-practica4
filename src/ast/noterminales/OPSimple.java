@@ -2,6 +2,7 @@ package ast.noterminales;
 
 import ast.E;
 import ast.LD2;
+import ast.TipoE;
 
 public class OPSimple extends LD2 {
 	
@@ -15,5 +16,10 @@ public class OPSimple extends LD2 {
 	
 	public E exp() {return exp;}
 	public String id() {return id;}
+
+	@Override
+	public String toString() {
+		return TipoE.ID.toString() + " (" + exp + ")";
+	}
 	
 }

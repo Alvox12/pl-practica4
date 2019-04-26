@@ -11,8 +11,9 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Reader input = new InputStreamReader(new FileInputStream("input.txt"));
-		ConstructorAST asint = new ConstructorAST(input);
-		asint.Sp();
+		ConstructorAST ast = new ConstructorAST(input);
+		S s = ast.Sp();
+		System.out.println(s);
 	}
 
 }

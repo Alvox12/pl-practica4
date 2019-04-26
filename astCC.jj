@@ -69,10 +69,10 @@ PARSER_END(ConstructorAST)
  S Sp() : {S ast;} {ast=S() <EOF> {return ast;}}
  S S()  : {LDs def; LD2 decs;} {def=LDs() <separador> decs=LD2() {return new S(def, decs);}}
  
- LDs LDs() : {D d; LDs aOfRLDs;} {d=D() aOfRLDs=RLDs(as.defSimple(d.tipo(), d.id())) {return aOfRLDs;}}
+ LDs LDs() : {D d; LDs aOfRLDs;} {d=D() aOfRLDs=RLDs(as.defSimple(d)) {return aOfRLDs;}}
  
  LDs RLDs(LDs ahOfRLDs0) : {D d; LDs aOfRLDs1;} 
- {";" d=D() aOfRLDs1=RLDs(as.defCompuesta(ahOfRLDs0,d.tipo(),d.id()))
+ {";" d=D() aOfRLDs1=RLDs(as.defCompuesta(ahOfRLDs0,d))
 	 {return aOfRLDs1;}|
 	 {return ahOfRLDs0;} }
  
@@ -102,14 +102,14 @@ LD2 RLD2(LD2 ahOfRLD20) : {D2 d; LD2 aOfRLD21;}
  E RE1(E ahOfRE1): {int op1; E aOfE2; E aOfRE1;}
 	 {op1=OPAND() aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
 	 {return aOfRE1;} 
-	  | op1=OPOR() aOfE2=E2(){return aOfE2;}
+	  | op1=OPOR() aOfE2=E2(){return mkexp(op1,ahOfRE1,aOfE2);}
 	  | {return ahOfRE1;} }
 	
 	
 E E2() : {E aOfE3,aOfRE2;} {aOfE3=E3() aOfRE2=RE2(aOfE3) {return aOfRE2;}}
 	
-E RE2(E ahOfRE2) : {int op2; E aOfE3; E aOfRE2;}
-	{op2=OP2() aOfE3=E3() aOfRE2=RE2(mkexp(op2,ahOfRE2,aOfE3)){return aOfE3;}
+E RE2(E ahOfRE2) : {int op2; E aOfE3;}
+	{op2=OP2() aOfE3=E3() {return mkexp(op2,ahOfRE2,aOfE3);}
 	| {return ahOfRE2;}}
 	 	
 
@@ -121,7 +121,7 @@ E RE3(E ahOfRE3) : {int op3; E aOfE4; E aOfRE3;}
 	 {return ahOfRE3;} }
 	 
 	 
-E E4() : {E aOfE4, aOfE5; int op4;} {op4=OPNOT() aOfE5=E5() {return aOfE5;}
+E E4() : {E aOfE4, aOfE5; int op4;} {op4=OPNOT() aOfE5=E5() {return mkexpnot(op4, aOfE5);}
 | aOfE5=E5() {return aOfE5;} | "-" aOfE4=E4() {return aOfE4;}}
 	
 	

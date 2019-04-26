@@ -14,6 +14,6 @@ public class S {
 	public LDs def() {return def;}
 	
 	public String toString() {
-		return def.toString() + decs.toString();
+		return def.toString() + "\n" + decs.toString();
 	}
 }

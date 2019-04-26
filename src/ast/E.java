@@ -9,5 +9,7 @@ public abstract class E {
 	public LDs def() {throw new UnsupportedOperationException("def");}
 	public LD2 defOp() {throw new UnsupportedOperationException("defop");}
 	public String id() {throw new UnsupportedOperationException("id");}
-	public String val() {throw new UnsupportedOperationException("real, entero o booleano");} 
+	public String val() {throw new UnsupportedOperationException("real, entero o booleano");}
+	
+	public String toString() {return tipo().toString();}
 }

@@ -17,5 +17,9 @@ public class Not extends E{
 	public TipoE tipo() {
 		return TipoE.NOT;
 	}
+	
+	public String toString() {
+		return tipo().toString() + " " + "(" + opnd1 + ")";
+	}
 
 }

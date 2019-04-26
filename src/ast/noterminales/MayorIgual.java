@@ -7,7 +7,7 @@ import ast.TipoE;
 public class MayorIgual extends EBin{
 
 	public MayorIgual(E opnd1, E opnd2) {
-		super(opnd1, opnd2);
+		super(opnd1, opnd2, TipoE.MAYORIGUAL);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class ConstructorAST implements ConstructorASTConstants {
 
   final public LDs LDs() throws ParseException {D d; LDs aOfRLDs;
     d = D();
-    aOfRLDs = RLDs(as.defSimple(d.tipo(), d.id()));
+    aOfRLDs = RLDs(as.defSimple(d));
 {if ("" != null) return aOfRLDs;}
     throw new Error("Missing return statement in function");
   }
@@ -69,7 +69,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     case 17:{
       jj_consume_token(17);
       d = D();
-      aOfRLDs1 = RLDs(as.defCompuesta(ahOfRLDs0,d.tipo(),d.id()));
+      aOfRLDs1 = RLDs(as.defCompuesta(ahOfRLDs0,d));
 {if ("" != null) return aOfRLDs1;}
       break;
       }
@@ -176,7 +176,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     case or:{
       op1 = OPOR();
       aOfE2 = E2();
-{if ("" != null) return aOfE2;}
+{if ("" != null) return mkexp(op1,ahOfRE1,aOfE2);}
       break;
       }
     default:
@@ -193,7 +193,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final public E RE2(E ahOfRE2) throws ParseException {int op2; E aOfE3; E aOfRE2;
+  final public E RE2(E ahOfRE2) throws ParseException {int op2; E aOfE3;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case 23:
     case 24:
@@ -203,8 +203,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     case 28:{
       op2 = OP2();
       aOfE3 = E3();
-      aOfRE2 = RE2(mkexp(op2,ahOfRE2,aOfE3));
-{if ("" != null) return aOfE3;}
+{if ("" != null) return mkexp(op2,ahOfRE2,aOfE3);}
       break;
       }
     default:
@@ -243,7 +242,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     case not:{
       op4 = OPNOT();
       aOfE5 = E5();
-{if ("" != null) return aOfE5;}
+{if ("" != null) return mkexpnot(op4, aOfE5);}
       break;
       }
     case verdadero:
