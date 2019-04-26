@@ -13,6 +13,15 @@ public class ConstructorAST {
 	 private final static int MENOS=1;
 	 private final static int POR=2;
 	 private final static int DIV=3;
+	 private final static int AND=4;
+	 private final static int OR=5;
+	 private final static int NOT=6;
+	 private final static int MAYOR=7;
+	 private final static int MENOR=8;
+	 private final static int MAYORIGUAL=9;
+	 private final static int MENORIGUAL=10;
+	 private final static int DIFERENTE=11;
+	 private final static int EQUIVALENTE=12;
 	 
 	 private E mkexp(int op, E opnd1, E opnd2){
 		 switch(op) { 
@@ -22,7 +31,6 @@ public class ConstructorAST {
 			 case DIV: return as.div(opnd1,opnd2);
 			 case AND: return as.and(opnd1,opnd2);
 			 case OR: return as.or(opnd1,opnd2);
-			 case NOT: return as.not(opnd1);
 			 case MAYOR: return as.mayor(opnd1,opnd2);
 			 case MENOR: return as.menor(opnd1,opnd2);
 			 case MAYORIGUAL: return as.mayorIgual(opnd1,opnd2);
@@ -32,6 +40,11 @@ public class ConstructorAST {
 			 default: return null;
 		}
 	}
+	
+	private E mkexpnot(int op, E opnd1){
+		return as.not(opnd1);
+	}
+	
 } 
 
 PARSER_END(ConstructorAST)
@@ -76,28 +89,48 @@ LDs RLD2(LD2 ahOfRLD20) : {ResulD2 d; LD2 aOfRLD21;}
 	 
  E E1() : {E aOfE2,aOfRE1;} {aOfE2=E2() aOfRE1=RE1(aOfE2) {return aOfRE1;}}
  
- E RE1(): {E ahOfRE1} : {int op1; E aOfE2; E aOfRE1;}
+ E RE1(E ahOfRE1): {int op1; E aOfE2; E aOfRE1;}
 	 {op1=AND aOfE2=E2() aOfRE1=RE1(mkexp(op1,ahOfRE1,aOfE2))
 	 {return aOfRE1;} 
 	  | op1=OR aOfE2=E2() (mkexp(op1,ahOfRE1,aOfE2)){return aOfE2;}
 	  | {return ahOfRE1;} }
 	
 	
+E E2() : {E aOfE3,aOfRE2;} {aOfE3=E3() aOfRE2=RE2(aOfE3) {return aOfRE2;}}
 	
+E RE2(E ahOfRE2) : {int op2; E aOfE3; E aOfRE2;}
+	{op2=OP2() aOfE3=E3() aOfRE2=RE2(mkexp(op2,ahOfRE2,aOfE3)){return aOfE3;}
+	| {return ahOfRE2;}}
+	 	
+
+E E3() : {E aOfE4,aOfRE3;} {aOfE4=E4() aOfRE3=RE3(aOfE4) {return aOfRE3;}}
+
+E RE3(E ahOfRE3) : {int op3; E aOfE4; E aOfRE3;}
+	 {op3=OP3() aOfE4=E4() aOfRE3=RE3(mkexp(op3,ahOfRE3,aOfE4))
+	 {return aOfRE3;}|
+	 {return ahOfRE3;} }
+	 
+	 
+E E4() : {E aOfE4, aOfE5: int op4} {op4=NOT aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;}
+| aOfE5=E5() (mkexpnot(aOfE5)){return aOfE5;} | {return aOfE4;}}
+	
+	
+E E5() : {Token t; E aOfE0;}
+	 {t=<numeroEntero> {return as.entero(t.image);} |
+	 t=<numeroReal> {return as.real(t.image);}|
+	 t=<identificador> {return as.id(t.image);} |
+	 t=<verdadero> {return as.boolTrue(t.image);} |
+	 t=<falso> {return as.boolFalse(t.image);} |
+	 "(" aOfE0=E0() ")" {return aOfE0;}}
+ 
   int OP0() : {} {"+" {return MAS;}| "-" {return MENOS;}}
   
   int OP2() : {} {"<" {return MENOR;}| ">" {return MAYOR;} | "<=" {return MENORIGUAL;}
   | ">=" {return MAYORIGUAL;} | "==" {return EQUIVALENTE;} | "!=" {return DIFERENTE;}}
   
   int OP3() : {} {"*" {return POR;}| "/" {return DIV;}}
-  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-  E RE0(E ahOfRE0) : {int op0; E aOfE1; E aOfRE0;}
- {op0=OP0() aOfE1=E1() aOfRE0=RE0(mkexp(op0,ahOfRE0,aOfE1))
- {return aOfRE0;}|
- {return ahOfRE0;} } 
   
   
   
