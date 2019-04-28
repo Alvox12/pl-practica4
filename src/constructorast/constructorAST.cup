@@ -1,0 +1,148 @@
+package constructorast;
+
+import ast.*;
+import alex.*;
+import errors.*;
+import java_cup.runtime.*;
+
+
+scan with {: return getScanner().next_token(); :};
+action code {:
+   private AST as = new AST();
+:};
+parser code {: 
+   private GestionErrores errores;
+   public void syntax_error(Symbol unidadLexica) {
+     errores.errorSintactico((UnidadLexica)unidadLexica);
+   }
+:};
+init with {: 
+   errores = new GestionErrores();
+   AnalizadorLexico alex = (AnalizadorLexico)getScanner();
+   alex.fijaGestionErrores(errores);
+:};
+
+terminal   	IDEN, ENT, REAL, PAP, PCIERRE, IGUAL, EQUIVALENTE, PUNTOCOMA,
+			MAYOR, MENOR, MAYIGUAL, MENIGUAL, MAS, AND, OR, NOT, MENOS, POR, DIV, SEPARADOR, DIFERENTE, NUM, BOOL, TRUE, FALSE;
+			
+non terminal S Sp, S;
+non terminal LDs LDs; 
+non terminal D D;
+non terminal LD2 LD2;
+non terminal D2 D2;
+non terminal E E0, E1, E2, E3, E4, E5;
+		
+Sp  ::=  S: aDeterm
+	{: RESULT = aDeterm; :};
+
+S   ::= LDs: aDeexp1 SEPARADOR LD2: aDeterm
+	{: RESULT=new S(aDeexp1,aDeterm); :};
+	
+LDs ::= LDs: aDeexp1 PUNTOCOMA D: aDeterm
+	{: RESULT=as.defCompuesta(aDeexp1,aDeterm); :};
+	
+LDs ::= D: aDeterm
+	{: RESULT=as.defSimple(aDeterm); :};
+	
+D ::= NUM IDEN: aDeterm
+   {: RESULT=new D("num", aDeterm); :};
+   
+D ::= BOOL IDEN: aDeterm
+   {: RESULT=new D("bool", aDeterm); :};
+   
+LD2 ::= LD2: aDeexp1 PUNTOCOMA D2: aDeterm
+	{: RESULT=as.cCompuesta(aDeexp1,aDeterm); :};
+	
+	
+LD2 ::= D2: aDeterm
+	{: RESULT=as.cSimple(aDeterm); :};
+	
+D2 ::= IDEN: aDeterm IGUAL E0: aDeexp1
+	{: RESULT=new D2(aDeterm, aDeexp1); :};
+	
+		
+E0 ::= E0: aDeexp1 MAS E1: aDeterm 
+   {: RESULT=as.suma(aDeexp1,aDeterm); :};
+   
+E0 ::= E0: aDeexp1 MENOS E1: aDeterm 
+   {: RESULT=as.resta(aDeexp1,aDeterm); :};
+   
+E0 ::= E1: aDeterm
+   {: RESULT=aDeterm; :};
+   
+E1 ::= E2: aDeexp1 AND E1: aDeterm 
+   {: RESULT=as.and(aDeexp1,aDeterm); :};
+   
+E1 ::= E2: aDeexp1 OR E2: aDeterm 
+   {: RESULT=as.or(aDeexp1,aDeterm); :};
+   
+E1 ::= E2: aDeterm
+   {: RESULT=aDeterm; :};
+
+
+E2 ::= E3: aDeexp1 MAYOR E3: aDeterm 
+   {: RESULT=as.mayor(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeexp1 MAYIGUAL E3: aDeterm 
+   {: RESULT=as.mayorIgual(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeexp1 MENOR E3: aDeterm 
+   {: RESULT=as.menor(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeexp1 MENIGUAL E3: aDeterm 
+   {: RESULT=as.menorIgual(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeexp1 DIFERENTE E3: aDeterm 
+   {: RESULT=as.dif(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeexp1 EQUIVALENTE E3: aDeterm 
+   {: RESULT=as.eq(aDeexp1,aDeterm); :};
+   
+E2 ::= E3: aDeterm
+   {: RESULT=aDeterm; :};
+   
+E3 ::= E3: aDeexp1 POR E4: aDeterm 
+   {: RESULT=as.mul(aDeexp1,aDeterm); :};
+   
+E3 ::= E3: aDeexp1 DIV E4: aDeterm 
+   {: RESULT=as.div(aDeexp1,aDeterm); :};
+   
+E3 ::= E4: aDeterm
+   {: RESULT=aDeterm; :};
+   
+E4 ::= MENOS E4: aDeterm 
+   {: RESULT=aDeterm; :};
+   
+E4 ::= NOT E5: aDeterm 
+   {: RESULT=as.not(aDeterm); :};
+   
+E4 ::= E5: aDeterm 
+   {: RESULT=aDeterm; :};
+   
+E5 ::= ENT: aDeterm 
+   {: RESULT=as.entero(aDeterm); :};
+   
+E5 ::= REAL: aDeterm 
+   {: RESULT=as.real(aDeterm); :};
+   
+E5 ::= IDEN: aDeterm 
+   {: RESULT=as.id(aDeterm); :};
+   
+E5 ::= TRUE: aDeterm 
+   {: RESULT=as.boolTrue(aDeterm); :};
+   
+E5 ::= FALSE: aDeterm 
+   {: RESULT=as.boolFalse(aDeterm); :};
+   
+E5 ::= PAP E0: aDeexp PCIERRE
+   {: RESULT = aDeexp; :};
+   
+
+
+
+
+
+
+
+
+
