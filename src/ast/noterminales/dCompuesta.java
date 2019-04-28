@@ -27,7 +27,7 @@ public class dCompuesta extends LDs{
 
 	@Override
 	public String toString() {
-		return tipo + " " + TipoE.ID.toString() + ":" + d.id() + "\n" + def;
+		return tipo + " " + TipoE.ID.toString() + "\n" + def;
 	}
 
 }

@@ -22,6 +22,6 @@ public class OPCompuesta extends LD2 {
 
 	@Override
 	public String toString() {
-		return TipoE.ID.toString() + " ("  +exp + ")" + "\n" + "(" + decs + ")";
+		return TipoE.ID.toString() + " = \n  " + exp + "\n  "  + decs;
 	}
 }

@@ -19,7 +19,7 @@ public class OPSimple extends LD2 {
 
 	@Override
 	public String toString() {
-		return TipoE.ID.toString() + " (" + exp + ")";
+		return TipoE.ID.toString() + " = \n  " + exp ;
 	}
 	
 }

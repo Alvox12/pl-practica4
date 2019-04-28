@@ -24,7 +24,7 @@ public class dSimple extends LDs{
 	
 	@Override
 	public String toString() {
-		return tipo + " " + TipoE.ID.toString() + ":" + d.id();
+		return tipo + " " + TipoE.ID.toString();
 	}
 	
 }
