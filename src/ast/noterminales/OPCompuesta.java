@@ -1,27 +1,26 @@
 package ast.noterminales;
 
+import ast.D2;
 import ast.E;
 import ast.LD2;
 import ast.TipoE;
 
 public class OPCompuesta extends LD2 {
 
-	private E exp;
-	private String id;
+	private D2 d2;
 	private LD2 decs;
 	
-	public OPCompuesta(LD2 decs, String id, E exp) {
+	public OPCompuesta(LD2 decs, D2 d2) {
 		this.decs = decs;
-		this.id = id;
-		this.exp = exp;
+		this.d2 = d2;
 	}
 
-	public E exp() {return exp;}
-	public String id() {return id;}
+	public E exp() {return d2.exp();}
+	public String id() {return d2.id();}
 	public LD2 decs() {return decs;}
 
 	@Override
 	public String toString() {
-		return TipoE.ID.toString() + " = \n  " + exp + "\n  "  + decs;
+		return TipoE.ID.toString() + " = \n " + d2.exp() + "\n "  + decs;
 	}
 }

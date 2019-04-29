@@ -32,10 +32,10 @@ public class AST {
 		return new dSimple(d);
 	}
 	
-	public LD2 cCompuesta(LD2 decs, String id, E exp) {
-		 return new OPCompuesta(decs,id,exp);}
+	public LD2 cCompuesta(LD2 decs, D2 d2) {
+		 return new OPCompuesta(decs,d2);}
 	
-	public LD2 cSimple(String id, E exp) {return new OPSimple(id,exp);} 
+	public LD2 cSimple(D2 d2) {return new OPSimple(d2);} 
 }
 
 

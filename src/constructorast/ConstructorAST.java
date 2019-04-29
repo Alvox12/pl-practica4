@@ -104,7 +104,7 @@ public class ConstructorAST implements ConstructorASTConstants {
 
   final public LD2 LD2() throws ParseException {D2 d; LD2 aOfRLD2;
     d = D2();
-    aOfRLD2 = RLD2(as.cSimple(d.id(),d.exp()));
+    aOfRLD2 = RLD2(as.cSimple(d));
 {if ("" != null) return aOfRLD2;}
     throw new Error("Missing return statement in function");
   }
@@ -114,7 +114,7 @@ public class ConstructorAST implements ConstructorASTConstants {
     case 17:{
       jj_consume_token(17);
       d = D2();
-      aOfRLD21 = RLD2(as.cCompuesta(ahOfRLD20,d.id(),d.exp()));
+      aOfRLD21 = RLD2(as.cCompuesta(ahOfRLD20,d));
 {if ("" != null) return aOfRLD21;}
       break;
       }

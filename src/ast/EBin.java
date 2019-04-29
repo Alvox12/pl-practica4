@@ -15,6 +15,6 @@ public abstract class EBin extends E{
 	public E opnd2() {return opnd2;}
 	
 	public String toString() {
-		return tipo.toString() + " -->  " + "( " + opnd1 + " " + opnd2 + " )\n";
+		return tipo.toString() + " --> " + "( " + opnd1 + " " + opnd2 + " )\n";
 	}
 }

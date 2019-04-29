@@ -79,11 +79,11 @@ PARSER_END(ConstructorAST)
  D D() : {Token tipo; Token id;} {tipo=<num> id=<identificador> {return new D(tipo.image, id.image);}
  | tipo=<bool> id=<identificador> {return new D(tipo.image, id.image);}}
  
- LD2 LD2() : {D2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d.id(),d.exp()))
+ LD2 LD2() : {D2 d; LD2 aOfRLD2;} {d=D2() aOfRLD2=RLD2(as.cSimple(d))
  	{return aOfRLD2;}}
 
 LD2 RLD2(LD2 ahOfRLD20) : {D2 d; LD2 aOfRLD21;}
-	 {";" d=D2() aOfRLD21=RLD2(as.cCompuesta(ahOfRLD20,d.id(),d.exp()))
+	 {";" d=D2() aOfRLD21=RLD2(as.cCompuesta(ahOfRLD20,d))
 	 {return aOfRLD21;}|
 	 {return ahOfRLD20;} }
 	 
